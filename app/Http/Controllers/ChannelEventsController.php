@@ -130,17 +130,18 @@ class ChannelEventsController extends Controller
 			return Larapi::respondUnauthorized();
 		
 		// filter request data
+		$event_uuid = empty($this->request->uuid)? null : trim($this->request->uuid);
 		$event_type = empty($this->request->event_type)? null : trim($this->request->event_type);
 		$event_text = empty($this->request->event_text)? null : trim($this->request->event_text);
 		$publish_to = empty($this->request->publish_to)? null : trim($this->request->publish_to);
 		$editable 	= is_true($this->request->editable);
 
 		// check required fields are valid
-		if(!$event_type || !$publish_to)
+		if(!$event_uuid || !$event_type || !$publish_to)
 			return Larapi::respondBadRequest(config('errors.4001'), 4001);
 
 		// insert new event
-		$event = $this->channel_event->insertNewEvent($channel->id, $this->request->user->id, $event_type, $event_text, $publish_to, $editable);
+		$event = $this->channel_event->insertNewEvent($channel->id, $this->request->user->id, $event_uuid, $event_type, $event_text, $publish_to, $editable);
 
 		// prepare and send response
         $response = $transformer->transformCollection([$this->channel_event->getChatChannelEvent($event->id)->toArray()]);
