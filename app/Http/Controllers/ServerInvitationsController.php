@@ -75,7 +75,7 @@ class ServerInvitationsController extends Controller
 		// check the user doesn't already exists as part of this channel
 		foreach($this->request->user->chat_servers as $user_server)
 			if($server->id === $user_server->id)
-				return Larapi::respondBadRequest(config('errors.4011'), 4011);
+				return Larapi::respondBadRequest(config('errors.40111'), 40111);
 
 		// attach the user as a member of the server
 		$server->users()->attach($this->request->user->id);
