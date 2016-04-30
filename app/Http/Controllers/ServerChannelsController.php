@@ -102,11 +102,6 @@ class ServerChannelsController extends Controller
         if($this->request->user->uuid !== $server->owner->uuid)
             return Larapi::respondUnauthorized();
 
-
-		// check the channel name only contains alphanumeric, hyphens and underscores
-		if (!$this->chat_channel->isValidChannelName($channel_name))
-			return Larapi::respondBadRequest(config('errors.4006'), 4006);
-
     	// check the channel name is between 2 and 100 characters in length
     	$len = strlen($channel_name);
     	if($len < 2 || $len > 100)
