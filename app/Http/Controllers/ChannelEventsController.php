@@ -130,10 +130,10 @@ class ChannelEventsController extends Controller
 			return Larapi::respondUnauthorized();
 		
 		// filter request data
-		$event_uuid = empty($this->request->uuid)? null : trim($this->request->uuid);
-		$event_type = empty($this->request->event_type)? null : trim($this->request->event_type);
-		$event_text = empty($this->request->event_text)? null : trim($this->request->event_text);
-		$publish_to = empty($this->request->publish_to)? null : trim($this->request->publish_to);
+		$event_uuid = trim($this->request->uuid) ?? null;
+		$event_type = trim($this->request->event_type) ?? null;
+		$event_text = trim($this->request->event_text) ?? null;
+		$publish_to = trim($this->request->publish_to) ?? null;
 		$editable 	= is_true($this->request->editable);
 
 		// check required fields are valid

@@ -84,6 +84,21 @@ class User extends Authenticatable
         return $to_array ? $user->toArray() : $user;
     }
 
+    /**
+     * Returns a user with associated relationships
+     * 
+     * @param mixed $identifier
+     * @param array $with (optional)
+     * @return this
+     */
+    public function getUser($identifier, $with = [])
+    {
+        return $this->where(function($query) use ($identifier) {
+            $column = (strlen(Uuid::import($identifier)->string) === 36)? 'uuid' : 'id';
+            $query->where($column, $identifier);
+        })->with($with)->first();
+    }
+
     
     /**
      * Inserts a new user
