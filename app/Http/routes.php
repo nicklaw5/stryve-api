@@ -13,6 +13,7 @@ Route::group(['prefix' => 'api', 'middleware' => 'cors'], function() {
 		Route::post('auth/logout', 'AuthController@logout');										// log user out
 
 		// users
+		Route::get('users', 'UsersController@index');												// returns all users
 		Route::get('users/self', 'UsersController@self');											// return users own object
 
 		// regions

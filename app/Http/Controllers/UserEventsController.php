@@ -80,7 +80,7 @@ class UserEventsController extends Controller
 		// TODO
 		
 		// filter request data
-		$event_uuid = trim($this->request->uuid) ?? null;
+		$event_uuid = trim($this->request->event_uuid) ?? null;
 		$event_type = trim($this->request->event_type) ?? null;
 		$event_text = trim($this->request->event_text) ?? null;
 		$publish_to = trim($this->request->publish_to) ?? null;
@@ -91,12 +91,11 @@ class UserEventsController extends Controller
 			return Larapi::respondBadRequest(config('errors.4001'), 4001);
 
 		// insert new event
-		$event = $this->user_event->insertNewEvent($event_uuid, $this->request->user->id, $recipient->id, $event_type, $event_text, $publish_to, $editable);
-
-		dd($event);
+		$event = $this->user_event->insertNewEvent($event_uuid, $this->request->user->id, $recipient->id,
+													$event_type, $event_text, $publish_to, $editable);
 
 		// prepare and send response
-        $response = $transformer->transformCollection([$this->channel_event->getChatChannelEvent($event->id)->toArray()]);
+        $response = $transformer->transformCollection([$this->user_event->getUserEvent($event->id, ['sender', 'recipient'])->toArray()]);
         return Larapi::respondOk($response[0]);
 	}
 }

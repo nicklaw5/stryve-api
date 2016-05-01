@@ -55,7 +55,7 @@ class UserEvent extends Model
     public function getUserEvent($identifier, $with = [])
     {
         return $this->where(function($query) use ($identifier) {
-            $column = (strlen(Uuid::import($identifier)->string) === 36)? 'uuid' : 'id';
+            $column = strlen(Uuid::import($identifier)->string) === 36 ? 'uuid' : 'id';
             $query->where($column, $identifier);
         })->with($with)->first();
     }
