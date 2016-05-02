@@ -105,7 +105,7 @@ class AuthController extends Controller
  		$user = $this->request->user;
 		$user->token = null;
 		$user->token_expires = null;
-		$user->online = false;
+		$user->status = 'offline';
 		$user->save();
 
 		Auth::logout();

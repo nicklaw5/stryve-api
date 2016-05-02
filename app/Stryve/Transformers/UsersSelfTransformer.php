@@ -17,7 +17,7 @@ class UsersSelfTransformer extends Transformer
 			'username'		=> $user['username'],
 			'email'			=> $user['email'],
 			'avatar'		=> $user['avatar'],
-			'online'		=> (boolean) $user['online'],
+			'status'		=> $user['status'],
 			'verified'		=> (boolean) $user['verified'],
 			'settings'		=> [
 				'last_chat_server' 	=> $user['user_settings']['last_chat_server'],

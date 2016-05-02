@@ -16,7 +16,7 @@ class UsersShowTransformer extends Transformer
 			'uuid' 			=> $user['uuid'],
 			'username'		=> $user['username'],
 			'avatar'		=> $user['avatar'],
-			'online'		=> (boolean) $user['online'],
+			'status'		=> $user['status'],
 			'verified'		=> (boolean) $user['verified'],
 			'created_at'	=> $user['created_at'],
 			'updated_at'	=> $user['updated_at']

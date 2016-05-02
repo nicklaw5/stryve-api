@@ -124,7 +124,7 @@ class User extends Authenticatable
         $user->password             = Hash::make($password);
         $user->token                = $token;
         $user->token_expires        = $token_expires;
-        $user->online               = true;
+        $user->status               = 'online';
         $user->last_ip              = $request->ip();
         $user->last_login           = Carbon::now();
         $user->verification_token   = $verification_token;
@@ -149,7 +149,7 @@ class User extends Authenticatable
         $user = $this->find(Auth::user()->id);
         $user->token                = $token;
         $user->token_expires        = $token_expires;
-        $user->online               = true;
+        $user->status               = 'online';
         $user->last_ip              = $request->ip();
         $user->last_login           = Carbon::now();
         $user->save();

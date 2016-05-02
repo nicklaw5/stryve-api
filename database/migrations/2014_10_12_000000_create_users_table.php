@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $t->string('email')->unique();
             $t->string('password', 60);
             $t->string('avatar')->nullable();
-            $t->boolean('online')->default(0);
+            $t->enum('status', ['online', 'away', 'offline'])->default('offline');
             $t->string('token', 60)->index()->nullable();
             $t->integer('token_expires')->unsigned()->nullable();
             $t->boolean('verified')->default(0);
