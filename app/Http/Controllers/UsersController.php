@@ -66,7 +66,9 @@ class UsersController extends Controller
 	 */
  	public function self(UsersSelfTransformer $tranformer)
  	{
- 		$response = $tranformer->transformCollection([$this->request->user->toArray()]);
+ 		$user = $this->user->getUser($this->request->user->id, ['contacts', 'user_settings'])->toArray();
+
+ 		$response = $tranformer->transformCollection([$user]);
  		return Larapi::respondOk($response[0]);
  	}
  	

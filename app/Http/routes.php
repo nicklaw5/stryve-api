@@ -13,8 +13,19 @@ Route::group(['prefix' => 'api', 'middleware' => 'cors'], function() {
 		Route::post('auth/logout', 'AuthController@logout');										// log user out
 
 		// users
-		Route::get('users', 'UsersController@index');												// returns all users
+		Route::get('users', 'UsersController@index');												// returns all users known to the user through the servers they belong to
 		Route::get('users/self', 'UsersController@self');											// return users own object
+
+		// user contacts
+		Route::get('users/contacts', 'UserContactsController@index');								// returns a users contact list
+		Route::post('users/contacts', 'UserContactsController@store');								// create a new user contact
+		Route::delete('users/contacts/{uuid}', 'UserContactsController@delete');					// delete a user contact
+
+		// user events
+		Route::get('users/events/{uuid}', 'UserEventsController@index');							// return all events between two users
+		Route::post('users/events/{uuid}', 'UserEventsController@store');							// create a new event between two users
+		Route::put('users/events/{uuid}', 'UserEventsController@update');							// update an event bwteen two users
+		Route::delete('users/events/{uuid}', 'UserEventsController@delete');						// delete an event bwteen two users
 
 		// regions
 		Route::get('regions', 'RegionsController@index');											// return all server regions
@@ -53,12 +64,6 @@ Route::group(['prefix' => 'api', 'middleware' => 'cors'], function() {
 		// invitions
 		Route::get('invitations/{token}', 'ServerInvitationsController@show');						// accept an invitation to a channel
 		// Route::post('servers/{uuid}/invites', 'ChatChannelInvitesController@store');				// create an invitation to a channel
-
-		// user events
-		Route::get('users/events/{uuid}', 'UserEventsController@index');							// return all events between two users
-		Route::post('users/events/{uuid}', 'UserEventsController@store');							// create a new event between two users
-		Route::put('users/events/{uuid}', 'UserEventsController@update');							// update an event bwteen two users
-		Route::delete('users/events/{uuid}', 'UserEventsController@delete');						// delete an event bwteen two users
 	});
 
 });
