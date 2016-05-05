@@ -136,6 +136,8 @@ class ChannelEventsController extends Controller
 		$publish_to = trim($this->request->publish_to) ?? null;
 		$editable 	= is_true($this->request->editable);
 
+		$event_text = ($event_text == '')? null: $event_text;
+
 		// check required fields are valid
 		if(!$event_uuid || !$event_type || !$publish_to)
 			return Larapi::respondBadRequest(config('errors.4001'), 4001);

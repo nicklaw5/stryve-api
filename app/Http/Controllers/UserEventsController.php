@@ -49,12 +49,28 @@ class UserEventsController extends Controller
 	 * @Headers({"token": "a_long_access_token"})
 	 * @Response(200, body={ { ... } })
 	 */
- 	// public function index(UserEventsShowTransformer $tranformer, $uuid)
- 	// {
+ 	public function index(UserEventsShowTransformer $tranformer, $uuid)
+ 	{
+ 		$limit = $this->request->limit ?? 25;
 
- 	// 	$response = $tranformer->transformCollection([$this->request->user->toArray()]);
- 	// 	return Larapi::respondOk($response[0]);
- 	// }
+ 		$contact = $this->user->getUser($uuid);
+
+ 		// check for blocked messages
+ 		// TODO
+
+ 		$matchThese = ['sender_id' => $this->request->user->id, 'recipient_id' => $contact->id];
+ 		$orThese = ['sender_id' => $contact->id, 'recipient_id' => $this->request->user->id];
+
+ 		$events = $this->user_event->where($matchThese)
+ 									->orWhere($orThese)
+ 									->with('sender', 'recipient')
+ 									->orderBy('created_at', 'desc')
+ 									->limit($limit)
+ 									->get();
+
+ 		$response = $tranformer->transformCollection($events->toArray());
+ 		return Larapi::respondOk($response);
+ 	}
 
 	/**
 	 * Creates a new user event
