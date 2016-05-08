@@ -41,7 +41,7 @@ class UserEventsController extends Controller
 		$this->user_event = $user_event;
 	}
 
- 	/**
+	/**
 	 * Returns the events between two users
 	 *
 	 * @POST("/api/users/events/{uuid}")
@@ -55,8 +55,8 @@ class UserEventsController extends Controller
 
  		$contact = $this->user->getUser($uuid);
 
- 		// check for blocked messages
- 		// TODO
+		// check for blocked messages
+		// TODO
 
  		$matchThese = ['sender_id' => $this->request->user->id, 'recipient_id' => $contact->id];
  		$orThese = ['sender_id' => $contact->id, 'recipient_id' => $this->request->user->id];

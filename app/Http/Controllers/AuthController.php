@@ -74,7 +74,7 @@ class AuthController extends Controller
  		// attempt login with email and password
  		$email 		= empty($this->request->email)? 	null: trim($this->request->email);
  		$password 	= empty($this->request->password)? 	null: trim($this->request->password);
-
+ 		
  		// confirm required fields have been provided
  		if(!$email || !$password)
  			return Larapi::respondBadRequest(config('errors.4001'), 4001);

@@ -147,6 +147,6 @@ class ChannelEventsController extends Controller
 
 		// prepare and send response
         $response = $transformer->transformCollection([$this->channel_event->getChatChannelEvent($event->id)->toArray()]);
-        return Larapi::respondOk($response[0]);
+        return Larapi::respondCreated($response[0]);
 	}
 }
