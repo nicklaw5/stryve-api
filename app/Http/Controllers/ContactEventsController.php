@@ -6,15 +6,15 @@ use Auth;
 use Larapi;
 use Carbon;
 use App\Models\User;
-use App\Models\UserEvent;
-use Stryve\Transformers\UserEventsShowTransformer;
+use App\Models\ContactEvent;
+use Stryve\Transformers\ContactEventsShowTransformer;
 
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 
-class UserEventsController extends Controller
+class ContactEventsController extends Controller
 {
 	/**
 	 * @var \App\Models\User
@@ -22,9 +22,9 @@ class UserEventsController extends Controller
 	protected $user;
 
 	/**
-	 * @var \App\Models\UserEvent
+	 * @var \App\Models\ContactEvent
 	 */
-	protected $user_event;
+	protected $contact_event;
 
 	/**
 	 * @var \Illuminate\Http\Request
@@ -34,11 +34,11 @@ class UserEventsController extends Controller
 	/**
 	 * Instantiate a new instance
 	 */
-	public function __construct(Request $request, User $user, UserEvent $user_event)
+	public function __construct(Request $request, User $user, ContactEvent $contact_event)
 	{
 		$this->user = $user;
 		$this->request = $request;
-		$this->user_event = $user_event;
+		$this->contact_event = $contact_event;
 	}
 
 	/**
@@ -49,7 +49,7 @@ class UserEventsController extends Controller
 	 * @Headers({"token": "a_long_access_token"})
 	 * @Response(200, body={ { ... } })
 	 */
- 	public function index(UserEventsShowTransformer $tranformer, $uuid)
+ 	public function index(ContactEventsShowTransformer $tranformer, $uuid)
  	{
  		$limit = $this->request->limit ?? 25;
 
@@ -61,7 +61,7 @@ class UserEventsController extends Controller
  		$matchThese = ['sender_id' => $this->request->user->id, 'recipient_id' => $contact->id];
  		$orThese = ['sender_id' => $contact->id, 'recipient_id' => $this->request->user->id];
 
- 		$events = $this->user_event->where($matchThese)
+ 		$events = $this->contact_event->where($matchThese)
  									->orWhere($orThese)
  									->with('sender', 'recipient')
  									->orderBy('created_at', 'desc')
@@ -86,7 +86,7 @@ class UserEventsController extends Controller
 	 *	})
 	 * @Response(200, body={ ... })
 	 */
-	public function store(UserEventsShowTransformer $transformer, $uuid)
+	public function store(ContactEventsShowTransformer $transformer, $uuid)
 	{
 		// check for valid recipient
 		if(!$recipient = $this->user->getUser($uuid, ['user_settings']))
@@ -107,11 +107,11 @@ class UserEventsController extends Controller
 			return Larapi::respondBadRequest(config('errors.4001'), 4001);
 
 		// insert new event
-		$event = $this->user_event->insertNewEvent($event_uuid, $this->request->user->id, $recipient->id,
+		$event = $this->contact_event->insertNewEvent($event_uuid, $this->request->user->id, $recipient->id,
 													$event_type, $event_text, $publish_to, $editable);
 
 		// prepare and send response
-        $response = $transformer->transformCollection([$this->user_event->getUserEvent($event->id, ['sender', 'recipient'])->toArray()]);
+        $response = $transformer->transformCollection([$this->contact_event->getContactEvent($event->id, ['sender', 'recipient'])->toArray()]);
         return Larapi::respondOk($response[0]);
 	}
 }

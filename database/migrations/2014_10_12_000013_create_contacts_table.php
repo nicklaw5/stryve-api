@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserContactsTable extends Migration
+class CreateContactsTable extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -12,7 +12,7 @@ class CreateUserContactsTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('user_contacts', function (Blueprint $t) {
+		Schema::create('contacts', function (Blueprint $t) {
 			$t->engine = 'InnoDB';
 			
 			$t->integer('user_id')->unsigned();
@@ -27,6 +27,6 @@ class CreateUserContactsTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::drop('user_contacts');
+		Schema::drop('contacts');
 	}
 }

@@ -13,19 +13,31 @@ Route::group(['prefix' => 'api', 'middleware' => 'cors'], function() {
 		Route::post('auth/logout', 'AuthController@logout');										// log user out
 
 		// users
-		Route::get('users', 'UsersController@index');												// returns all users known to the user through the servers they belong to
+		// Route::get('users', 'UsersController@index');												// returns all users known to the user through the servers they belong to
 		Route::get('users/self', 'UsersController@self');											// return users own object
 
 		// user contacts
-		Route::get('users/contacts', 'UserContactsController@index');								// returns a users contact list
-		Route::post('users/contacts', 'UserContactsController@store');								// create a new user contact
-		Route::delete('users/contacts/{uuid}', 'UserContactsController@delete');					// delete a user contact
+		// Route::get('users/contacts', 'UserContactsController@index');								// returns a users contact list
+		// Route::post('users/contacts', 'UserContactsController@store');								// create a new user contact
+		// Route::delete('users/contacts/{uuid}', 'UserContactsController@delete');					// delete a user contact
 
 		// user events
-		Route::get('users/events/{uuid}', 'UserEventsController@index');							// return all events between two users
-		Route::post('users/events/{uuid}', 'UserEventsController@store');							// create a new event between two users
-		Route::put('users/events/{uuid}', 'UserEventsController@update');							// update an event bwteen two users
-		Route::delete('users/events/{uuid}', 'UserEventsController@delete');						// delete an event bwteen two users
+		// Route::get('users/events/{uuid}', 'UserEventsController@index');							// return all events between two users
+		// Route::post('users/events/{uuid}', 'UserEventsController@store');							// create a new event between two users
+		// Route::put('users/events/{uuid}', 'UserEventsController@update');							// update an event bwteen two users
+		// Route::delete('users/events/{uuid}', 'UserEventsController@delete');						// delete an event bwteen two users
+
+		// contacts
+		Route::get('contacts', 'ContactsController@index');											// returns a users contact list
+		Route::post('contacts', 'ContactsController@store');										// create a new user-contact relationship
+		Route::get('contacts/search', 'ContactsController@search');									// search for contacts
+		Route::delete('contacts/{uuid}', 'ContactsController@delete');								// delete a user-contact realtionship
+		
+		// contact events
+		Route::get('contacts/{uuid}/events', 'ContactEventsController@index');						// return all events between two users
+		Route::post('contacts/{uuid}/events', 'ContactEventsController@store');						// create a new event between two users
+		Route::put('contacts/{uuid}/events/{event_uuid}', 'ContactEventsController@update');		// update an event bwteen two users
+		Route::delete('contacts/{uuid}/events/{event_uuid}', 'ContactEventsController@delete');		// delete an event bwteen two users
 
 		// regions
 		Route::get('regions', 'RegionsController@index');											// return all server regions

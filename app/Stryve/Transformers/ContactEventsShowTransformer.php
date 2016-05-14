@@ -2,7 +2,7 @@
 
 namespace Stryve\Transformers;
 
-class UserEventsShowTransformer extends Transformer
+class ContactEventsShowTransformer extends Transformer
 {
 	/**
 	 * Transform the event for response purposes

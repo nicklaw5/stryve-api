@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserEventsTable extends Migration
+class CreateContactEventsTable extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -12,7 +12,7 @@ class CreateUserEventsTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('user_events', function (Blueprint $t) {
+		Schema::create('contact_events', function (Blueprint $t) {
 			$t->engine = 'InnoDB';
 			
 			$t->increments('id')->unsigned();
@@ -35,6 +35,6 @@ class CreateUserEventsTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::drop('user_events');
+		Schema::drop('contact_events');
 	}
 }

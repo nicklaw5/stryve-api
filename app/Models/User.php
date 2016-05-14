@@ -47,7 +47,7 @@ class User extends Authenticatable
 	 */
 	public function contacts()
 	{
-		return $this->belongsToMany('App\Models\User', 'user_contacts', 'user_id', 'contact_id');
+		return $this->belongsToMany('App\Models\User', 'contacts', 'user_id', 'contact_id');
 	}
 
 	/**

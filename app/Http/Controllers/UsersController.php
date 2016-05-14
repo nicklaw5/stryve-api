@@ -6,7 +6,6 @@ use Auth;
 use Larapi;
 use Carbon;
 use App\Models\User;
-use Stryve\Transformers\UsersShowTransformer;
 use Stryve\Transformers\UsersSelfTransformer;
 
 use App\Http\Requests;
@@ -34,27 +33,6 @@ class UsersController extends Controller
 		$this->user = $user;
 		$this->request = $request;
 	}
-
-	/**
-	 * Returns a list of users the user may or may not know
-	 *
-	 * @GET("/api/users")
-	 * @Versions({"v1"})
-	 * @Headers({"token": "a_long_access_token"})
-	 * @Response(200, body={ { ... } })
-	 */
- 	public function index(UsersShowTransformer $tranformer)
- 	{
-		$query = trim($this->request->q) ?? null;
-		// $limit = is_null($this->request->limit)? intval($this->request->limit) : 25;
-		$limit = 10;
-
-		// search for contacts that are apart of the same servers as the user
-		// TODO
-
- 		$response = $tranformer->transformCollection($this->user->where('username', 'LIKE', $query . '%')->limit($limit)->get()->toArray());
- 		return Larapi::respondOk($response);
- 	}
 
  	/**
 	 * Returns the user's data

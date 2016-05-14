@@ -2,7 +2,7 @@
 
 namespace Stryve\Transformers;
 
-class UsersShowTransformer extends Transformer
+class ContactShowTransformer extends Transformer
 {
 	/**
 	 * Transform the user for response purposes

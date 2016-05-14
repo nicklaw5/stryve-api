@@ -74,8 +74,8 @@ class ChannelEventsController extends Controller
 		if(!$belongs_to_channel)
 			return Larapi::respondUnauthorized();
 
-		// get and restrist the number of events returned
-		$limit = empty($this->request->limit)? 10 : intval($this->request->limit);
+		// get and restrict the number of events returned
+		$limit = isset($this->request->limit)? intval($this->request->limit) : 25;
 		$limit = ($limit > 50)? 50 : $limit;
 
 		// get the events

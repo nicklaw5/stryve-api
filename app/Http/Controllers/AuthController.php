@@ -54,7 +54,6 @@ class AuthController extends Controller
  		// attempt login with access token
  		if($token)
  		{
-			// return Larapi::respondOk([$token]);
 	        // attempt to find user from access token
 	        $user = $this->user->getUserByAccessToken($token);
 
