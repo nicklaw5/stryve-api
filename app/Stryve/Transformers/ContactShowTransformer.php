@@ -5,21 +5,26 @@ namespace Stryve\Transformers;
 class ContactShowTransformer extends Transformer
 {
 	/**
-	 * Transform the user for response purposes
+	 * Transform the contact for response purposes
 	 * 
-	 * @param array $user
+	 * @param array $contact
 	 * @return array
 	 */
-	public function transform($user)
+	public function transform($contact)
 	{
-		return [
-			'uuid' 			=> $user['uuid'],
-			'username'		=> $user['username'],
-			'avatar'		=> $user['avatar'],
-			'status'		=> $user['status'],
-			'verified'		=> (boolean) $user['verified'],
-			'created_at'	=> $user['created_at'],
-			'updated_at'	=> $user['updated_at']
+		$response = [
+			'uuid' 			=> $contact['uuid'],
+			'username'		=> $contact['username'],
+			'avatar'		=> $contact['avatar'],
+			'status'		=> $contact['status'],
+			'verified'		=> (boolean) $contact['verified'],
+			'created_at'	=> $contact['created_at'],
+			'updated_at'	=> $contact['updated_at']
 		];
+
+		if(isset($contact['is_contact']))
+			$response['is_contact'] = $contact['is_contact'];
+
+		return $response;
 	}
 }

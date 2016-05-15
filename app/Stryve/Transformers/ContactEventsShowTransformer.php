@@ -13,7 +13,7 @@ class ContactEventsShowTransformer extends Transformer
 	public function transform($event)
 	{
 		return [
-			'uuid' 					=> $event['uuid'],
+			'event_uuid' 			=> $event['uuid'],
 			'sender_uuid'			=> $event['sender']['uuid'],
 			'sender_username'		=> $event['sender']['username'],
 			'recipient_uuid'		=> $event['recipient']['uuid'],

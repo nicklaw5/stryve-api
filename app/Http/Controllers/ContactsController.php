@@ -51,14 +51,27 @@ class ContactsController extends Controller
 		// search for contacts that are apart of the same servers as the user
 		// TODO
 
-		$contacts = $this->user
+		$searchContacts = $this->user
 						->where('username', 'LIKE', $query . '%')
 						->whereNotIn('id', [$this->request->user->id])
 						->limit($limit)
-						->get()
-						->toArray();
+						->get();
 
- 		$response = $tranformer->transformCollection($contacts);
+		// filter with current contacts to get 'is_contact' attribute
+		$existingCotacts = $this->request->user->contacts;
+		for($i = 0; $i < count($searchContacts); $i++)
+		{
+			$isContact = false;
+			foreach ($existingCotacts as $exContact)
+			{
+				if($exContact->id === $searchContacts[$i]->id)
+					$isContact = true;
+			}
+
+			$searchContacts[$i]->is_contact = $isContact;
+		}
+
+		$response = $tranformer->transformCollection($searchContacts->toArray());
  		return Larapi::respondOk($response);
  	}
 
@@ -79,19 +92,48 @@ class ContactsController extends Controller
 	/**
 	 * Creates a new user event
 	 *
-	 * @POST("/api/users/events/{uuid}")
+	 * @POST("/api/contacts/{uuid}")
 	 * @Versions({"v1"})
 	 * @Headers({"token": "a_long_access_token"})
-	 * @Request({
-	 *		"event_type": 	"user_message",
-	 *		"event_text": 	"I like my eggs boiled :P",
-	 *		"publish_to": 	"both",
-	 *		"editable":		"true"
-	 *	})
-	 * @Response(200, body={ ... })
+	 * @Response(201, body={ ... })
 	 */
 	public function store(ContactShowTransformer $transformer, $uuid)
 	{
-		
+		$handled = false;
+		$isContact = false;
+
+		// get the contact resource
+		$contact = $this->user->getUser($uuid);
+
+		// check the contact relationship doesn't already exist
+		$contacts = $this->request->user->contacts;
+		foreach ($contacts as $exContact)
+		{
+			if($exContact->id === $contact->id)
+			{
+				// remove contact relationship
+				$this->request->user->contacts()->detach($contact->id);
+				$contact->is_contact = false;
+				$handled = true;
+				break;
+			}
+		}
+
+		// create contact relationship
+		if(!$handled)
+		{
+			$this->request->user->contacts()->attach($contact->id);
+			$contact->is_contact = true;
+		}
+
+		// set the response
+		// $res = [
+		// 	'isContact' => $isContact,
+		// 	'contact' => $transformer->transformCollection([$contact->toArray()])[0]
+		// ];
+
+		$contact = $transformer->transformCollection([$contact->toArray()])[0];
+
+		return Larapi::respondCreated($contact);
 	}
 }

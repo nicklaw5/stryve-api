@@ -13,7 +13,6 @@ use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-
 class ContactEventsController extends Controller
 {
 	/**
@@ -44,7 +43,7 @@ class ContactEventsController extends Controller
 	/**
 	 * Returns the events between two users
 	 *
-	 * @POST("/api/users/events/{uuid}")
+	 * @POST("/api/contacts/{uuid}/events")
 	 * @Versions({"v1"})
 	 * @Headers({"token": "a_long_access_token"})
 	 * @Response(200, body={ { ... } })
@@ -107,11 +106,12 @@ class ContactEventsController extends Controller
 			return Larapi::respondBadRequest(config('errors.4001'), 4001);
 
 		// insert new event
-		$event = $this->contact_event->insertNewEvent($event_uuid, $this->request->user->id, $recipient->id,
-													$event_type, $event_text, $publish_to, $editable);
+		$event = $this->contact_event->insertNewContactEvent($event_uuid, $this->request->user->id, $recipient->id,
+																$event_type, $event_text, $publish_to, $editable);
 
 		// prepare and send response
-        $response = $transformer->transformCollection([$this->contact_event->getContactEvent($event->id, ['sender', 'recipient'])->toArray()]);
+		$event = $this->contact_event->getContactEvent($event->id, ['sender', 'recipient'])->toArray();
+        $response = $transformer->transformCollection([$event]);
         return Larapi::respondOk($response[0]);
 	}
 }
