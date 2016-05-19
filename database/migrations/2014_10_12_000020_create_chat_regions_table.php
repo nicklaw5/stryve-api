@@ -18,7 +18,7 @@ class CreateChatRegionsTable extends Migration
             $t->increments('id')->unsigned();
             $t->string('uuid', 36)->unique();
             $t->string('name', 20)->unique();
-            $t->string('location')->index(); // sydney, melbourne, us west, us east
+            $t->string('location')->index(); // sydney, melbourne, us west, us east, etc
             $t->string('server_ip');
             $t->string('server_uri');
             $t->boolean('active')->index();

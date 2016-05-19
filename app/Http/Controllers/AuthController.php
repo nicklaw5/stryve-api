@@ -54,7 +54,6 @@ class AuthController extends Controller
  		// attempt login with access token
  		if($token)
  		{
-			// return Larapi::respondOk([$token]);
 	        // attempt to find user from access token
 	        $user = $this->user->getUserByAccessToken($token);
 
@@ -74,7 +73,7 @@ class AuthController extends Controller
  		// attempt login with email and password
  		$email 		= empty($this->request->email)? 	null: trim($this->request->email);
  		$password 	= empty($this->request->password)? 	null: trim($this->request->password);
-
+ 		
  		// confirm required fields have been provided
  		if(!$email || !$password)
  			return Larapi::respondBadRequest(config('errors.4001'), 4001);
@@ -105,7 +104,7 @@ class AuthController extends Controller
  		$user = $this->request->user;
 		$user->token = null;
 		$user->token_expires = null;
-		$user->online = false;
+		$user->status = 'offline';
 		$user->save();
 
 		Auth::logout();

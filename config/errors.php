@@ -19,5 +19,5 @@ return [
 	'4008'	=> 'Failed to join server. Invalid invitation token.',
 	'4009'	=> 'Failed to join server. Invitation token expired.',
 	'4010'	=> 'Failed to join server. Invitation token has exceeded its maximum uses.',
-	'4011'	=> 'Failed to join server. You\'re already a member of this server.',
+	'40111'	=> 'Failed to join server. You\'re already a member of this server.',
 ];

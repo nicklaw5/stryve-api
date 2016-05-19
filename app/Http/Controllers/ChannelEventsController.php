@@ -74,8 +74,8 @@ class ChannelEventsController extends Controller
 		if(!$belongs_to_channel)
 			return Larapi::respondUnauthorized();
 
-		// get and restrist the number of events returned
-		$limit = empty($this->request->limit)? 10 : intval($this->request->limit);
+		// get and restrict the number of events returned
+		$limit = isset($this->request->limit)? intval($this->request->limit) : 25;
 		$limit = ($limit > 50)? 50 : $limit;
 
 		// get the events
@@ -130,20 +130,23 @@ class ChannelEventsController extends Controller
 			return Larapi::respondUnauthorized();
 		
 		// filter request data
-		$event_type = empty($this->request->event_type)? null : trim($this->request->event_type);
-		$event_text = empty($this->request->event_text)? null : trim($this->request->event_text);
-		$publish_to = empty($this->request->publish_to)? null : trim($this->request->publish_to);
+		$event_uuid = trim($this->request->uuid) ?? null;
+		$event_type = trim($this->request->event_type) ?? null;
+		$event_text = trim($this->request->event_text) ?? null;
+		$publish_to = trim($this->request->publish_to) ?? null;
 		$editable 	= is_true($this->request->editable);
 
+		$event_text = ($event_text == '')? null: $event_text;
+
 		// check required fields are valid
-		if(!$event_type || !$publish_to)
+		if(!$event_uuid || !$event_type || !$publish_to)
 			return Larapi::respondBadRequest(config('errors.4001'), 4001);
 
 		// insert new event
-		$event = $this->channel_event->insertNewEvent($channel->id, $this->request->user->id, $event_type, $event_text, $publish_to, $editable);
+		$event = $this->channel_event->insertNewEvent($channel->id, $this->request->user->id, $event_uuid, $event_type, $event_text, $publish_to, $editable);
 
 		// prepare and send response
         $response = $transformer->transformCollection([$this->channel_event->getChatChannelEvent($event->id)->toArray()]);
-        return Larapi::respondOk($response[0]);
+        return Larapi::respondCreated($response[0]);
 	}
 }

@@ -87,20 +87,4 @@ class ChatChannel extends Model
 
         return $channel;
     }
-
-    /**
-     * Determines whether or not the provided string can be valid channel name.
-     * (aphanumeric, spaces, underscores and hyphens)
-     *
-     * @param string $string
-     * @return bool
-     */
-    public function isValidChannelName($string)
-    {
-        // The regular expression for allowable characters in a subdomain: a-Z, 0-9, and hypens (no hypens/underscores at start or end)
-        $pattern = '/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9_ ]))*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/i';
-        if(1 !== preg_match($pattern, $string))
-            return false;
-        return true;
-    }
 }

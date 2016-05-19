@@ -66,16 +66,18 @@ class ChatChannelEvent extends Model
      * 
      * @param int $channel_id
      * @param int $owner_id
+     * @param string $event_uuid
      * @param string $event_type
      * @param string $event_text
      * @param string $publish_to
      * @param bool $editable
      * @return this
      */
-    public function insertNewEvent($channel_id, $owner_id, $event_type, $event_text, $publish_to, $editable)
+    public function insertNewEvent($channel_id, $owner_id, $event_uuid,
+                                    $event_type, $event_text, $publish_to, $editable)
     {
     	$event = new $this;
-    	$event->uuid 				= Uuid::generate()->string;
+    	$event->uuid 				= $event_uuid;
     	$event->chat_channel_id 	= $channel_id;
     	$event->owner_id 			= $owner_id;
     	$event->event_type 			= $event_type;
