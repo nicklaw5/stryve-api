@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateChatChannelSettingsTable extends Migration
+class CreateRegionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,12 +12,16 @@ class CreateChatChannelSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('chat_channel_settings', function (Blueprint $t) {
+        Schema::create('regions', function (Blueprint $t) {
             $t->engine = 'InnoDB';
             
             $t->increments('id')->unsigned();
-            $t->integer('chat_channel_id')->unsigned()->index();    // references chat_channel_settings->id
-            $t->boolean('private')->default(false);                 // public or private channel
+            $t->string('uuid', 36)->unique();
+            $t->string('name', 20)->unique();
+            $t->string('location')->index(); // sydney, melbourne, us west, us east, etc
+            $t->string('server_ip');
+            $t->string('server_uri');
+            $t->boolean('active')->index();
             $t->timestamps();
             $t->softDeletes();
         });
@@ -30,6 +34,6 @@ class CreateChatChannelSettingsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('chat_channel_settings');
+        Schema::drop('regions');
     }
 }

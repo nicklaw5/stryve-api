@@ -28,8 +28,8 @@ class ServersShowTransformer extends Transformer
 			'updated_at'	=> $server['updated_at'],
 		];
 
-		if(isset($server['chat_channels'])) {
-			$response['channels'] = $server['chat_channels'];
+		if(isset($server['channels'])) {
+			$response['channels'] = $server['channels'];
 		}
 
 		return $response;

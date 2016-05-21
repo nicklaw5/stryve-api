@@ -7,7 +7,7 @@ use Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ChatServer extends Model
+class Server extends Model
 {
     use SoftDeletes;
 
@@ -16,7 +16,7 @@ class ChatServer extends Model
      *
      * @var array
      */ 
-    protected $hidden = ['id', 'chat_server_setting_id', 'owner_id', 'region_id', 'deleted_at'];
+    protected $hidden = ['id', 'server_setting_id', 'owner_id', 'region_id', 'deleted_at'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -26,9 +26,9 @@ class ChatServer extends Model
     protected $dates = ['deleted_at'];
 
     /**
-     * The users that belong to this chat server.
+     * The users that belong to this server.
      *
-     * @return \App\Models\ChatServer
+     * @return \App\Models\Server
      */
     public function users()
     {
@@ -36,7 +36,7 @@ class ChatServer extends Model
     }
 
     /**
-     * Get the owner of the chat server.
+     * Get the owner of the server.
      *
      * @return \App\Models\User
      */
@@ -46,51 +46,51 @@ class ChatServer extends Model
     }
 
     /**
-     * Get the region of the chat server.
+     * Get the region of the server.
      *
-     * @return \App\Models\ChatRegion
+     * @return \App\Models\Region
      */
     public function region()
     {
-        return $this->belongsTo('App\Models\ChatRegion');
+        return $this->belongsTo('App\Models\Region');
     }
 
     /**
      * Get the channels for the server.
      *
-     * @return \App\Models\ChatChannel
+     * @return \App\Models\Channel
      */
-    public function chat_channels()
+    public function channels()
     {
-        return $this->hasMany('App\Models\ChatChannel');
+        return $this->hasMany('App\Models\Channel');
     }
 
     /**
      * Get the server settings for the server.
      *
-     * @return \App\Models\ChatServerSetting
+     * @return \App\Models\ServerSetting
      */
     public function server_settings()
     {
-        return $this->hasOne('App\Models\ChatServerSetting');
+        return $this->hasOne('App\Models\ServerSetting');
     }
     
     /**
-     * Returns a chat server with associated relationships
+     * Returns a server with associated relationships
      * 
      * @param mixed $id
      * @return this
      */
-    public function getChatServer($id, $withChannels = false)
+    public function getServer($id, $withChannels = false)
     {
         if($withChannels)
         {
             // get server by uuid
             if(strlen(Uuid::import($id)->string) === 36)
-                return $this->where('uuid', $id)->with('owner', 'region', 'chat_channels', 'server_settings')->first();
+                return $this->where('uuid', $id)->with('owner', 'region', 'channels', 'server_settings')->first();
 
             // get server by id
-            return $this->with('owner', 'region', 'chat_channels','server_settings')->find($id);
+            return $this->with('owner', 'region', 'channels','server_settings')->find($id);
         }
 
         // get server by uuid
@@ -102,7 +102,7 @@ class ChatServer extends Model
     }
 
     /**
-     * Creates a new chat server
+     * Creates a new server
      *
      * @param string $name
      * @param int $region_id

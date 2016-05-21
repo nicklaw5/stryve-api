@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateChatServerUserTable extends Migration
+class CreateServerUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,10 +12,10 @@ class CreateChatServerUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('chat_server_user', function (Blueprint $t) {
+        Schema::create('server_user', function (Blueprint $t) {
             $t->engine = 'InnoDB';
             
-            $t->integer('chat_server_id')->unsigned();
+            $t->integer('server_id')->unsigned();
             $t->integer('user_id')->unsigned();
         });
     }
@@ -27,6 +27,6 @@ class CreateChatServerUserTable extends Migration
      */
     public function down()
     {
-        Schema::drop('chat_server_user');
+        Schema::drop('server_user');
     }
 }

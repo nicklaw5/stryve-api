@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Larapi;
-use App\Models\ChatServer;
-use App\Models\ChatServerEvent;
+use App\Models\Server;
+use App\Models\ServerEvent;
 use Stryve\Transformers\ServerEventsShowTransformer;
 
 use App\Http\Requests;
@@ -19,76 +19,24 @@ class ServerEventsController extends Controller
 	protected $request;
 
 	/**
-	 * @var \App\Models\ChatServer
+	 * @var \App\Models\Server
 	 */
-	protected $chat_server;
+	protected $server;
 
 	/**
-	 * @var \App\Models\ChatServerEvent
+	 * @var \App\Models\ServerEvent
 	 */
 	protected $server_event;
 
 	/**
 	 * Instantiate a new instance
 	 */
-	public function __construct(Request $request, ChatServer $chat_server, ChatServerEvent $server_event)
+	public function __construct(Request $request, Server $server, ServerEvent $server_event)
 	{
 		$this->request = $request;
-		$this->chat_server = $chat_server;
+		$this->server = $server;
 		$this->server_event = $server_event;
 	}
-
-	/**
-     * Returns a list of chat channel events for a given channel
-     *
-     * @GET("/api/channels/{uuid}/events")
-     * @Versions({"v1"})
-     * @Headers({"token": "a_long_access_token"})
-     * @QueryParams({
-     *      @Parameter("limit=10", description="The number of events to return. Defaults to 10. Max is 50")
-     * })
-     * @Response(200, body={ ... })
-     */
-  //   public function show(ChannelEventsShowTransformer $transformer, $uuid)
-  //   {
-		// $belongs_to_channel = false;
-
-		// // get the channel
-		// $channel = $this->chat_channel->getChatChannel($uuid);
-
-		// // confirm channel exists
-		// if(!$channel)
-		// 	return Larapi::respondNotFound(config('errors.4041'), 4041);
-
-		// // check the channel belongs to a server that the user belongs to
-		// foreach ($this->request->user->chat_servers as $server)
-		// {
-		// 	if($server->uuid === $channel->chat_server->uuid)
-		// 	{
-		// 		$belongs_to_channel = true;
-		// 		break;
-		// 	}
-		// }
-
-		// // return unauthorized if user doesnt belong to this channel that they are posting in
-		// if(!$belongs_to_channel)
-		// 	return Larapi::respondUnauthorized();
-
-		// // get and restrist the number of events returned
-		// $limit = empty($this->request->limit)? 10 : intval($this->request->limit);
-		// $limit = ($limit > 50)? 50 : $limit;
-
-		// // get the events
-		// $events = $this->channel_event->with('chat_channel', 'owner')
-		// 							  ->where('chat_channel_id', $channel->id)
-		// 							  ->orderBy('created_at', 'desc')
-		// 							  ->limit($limit)
-		// 							  ->get();
-
-		// // prepare and send response
-  //       $response = $transformer->transformCollection($events->toArray());
-  //       return Larapi::respondOk($response);
-  //   }
 
 	/**
 	 * Creates a new server event
@@ -107,7 +55,7 @@ class ServerEventsController extends Controller
 	public function store(ServerEventsShowTransformer $transformer, $uuid)
 	{
 		// get the server
-		$server = $this->chat_server->getChatServer($uuid);
+		$server = $this->server->getServer($uuid);
 
 		// confirm server exists
 		if(!$server)
@@ -126,7 +74,7 @@ class ServerEventsController extends Controller
 		$event = $this->server_event->insertNewEvent($server->id, $this->request->user->id, $event_type, $event_text, $publish_to);
 
 		// prepare and send response
-        $response = $transformer->transformCollection([$this->server_event->getChatServerEvent($event->id)->toArray()]);
+        $response = $transformer->transformCollection([$this->server_event->getServerEvent($event->id)->toArray()]);
         return Larapi::respondCreated($response[0]);
 	}
 }

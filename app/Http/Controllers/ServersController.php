@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Larapi;
-use App\Models\ChatServer;
-use App\Models\ChatRegion;
-use App\Models\ChatServerSetting;
+use App\Models\Server;
+use App\Models\Region;
+use App\Models\ServerSetting;
 use Stryve\Transformers\ServersSelfTransformer;
 use Stryve\Transformers\ServersShowTransformer;
 
@@ -16,19 +16,19 @@ use App\Http\Controllers\Controller;
 class ServersController extends Controller
 {
     /**
-     * @var \App\Models\ChatServer
+     * @var \App\Models\Server
      */
-    protected $chat_server;
+    protected $server;
 
     /**
-     * @var \App\Models\ChatServerSetting
+     * @var \App\Models\ServerSetting
      */
-    protected $chat_server_setting;
+    protected $server_setting;
 
     /**
-     * @var \App\Models\ChatRegion
+     * @var \App\Models\Region
      */
-    protected $chat_region;
+    protected $region;
 
     /**
      * @var \Illuminate\Http\Request
@@ -38,13 +38,13 @@ class ServersController extends Controller
     /**
      * Instantiate a new instance
      */
-    public function __construct(Request $request, ChatServer $chat_server, ChatRegion $chat_region,
-                                ChatServerSetting $chat_server_setting)
+    public function __construct(Request $request, Server $server, Region $region,
+                                ServerSetting $server_setting)
     {
         $this->request = $request;
-        $this->chat_region = $chat_region;
-        $this->chat_server = $chat_server;
-        $this->chat_server_setting = $chat_server_setting;
+        $this->region = $region;
+        $this->server = $server;
+        $this->server_setting = $server_setting;
     }
 
 
@@ -59,7 +59,7 @@ class ServersController extends Controller
     public function self(ServersSelfTransformer $transformer)
     {
         // prepare the response and return the response
-        $response = $transformer->transformCollection($this->request->user->chat_servers->toArray());
+        $response = $transformer->transformCollection($this->request->user->servers->toArray());
         return Larapi::respondOk($response);
     }
 
@@ -71,7 +71,7 @@ class ServersController extends Controller
      * @Versions({"v1"})
      * @Headers({"token": "a_long_access_token"})
      * @QueryParams({
-     *      @Parameter("channels=true|false", description="TRUE=Include the chat channels that belong to the server in the response")
+     *      @Parameter("channels=true|false", description="TRUE=Include the channels that belong to the server in the response")
      * })
      * @Response(200, body={ ... })
      */
@@ -81,7 +81,7 @@ class ServersController extends Controller
         $withChannels = is_true($this->request->channels) ? true : false;
 
         // get all the servers the user belongs to
-        foreach($this->request->user->chat_servers as $server)
+        foreach($this->request->user->servers as $server)
             $servers[] = $server->uuid;
 
         // return Unauthorized if user does not belong to the requested server
@@ -89,7 +89,7 @@ class ServersController extends Controller
             return Larapi::respondUnauthorized();
 
         // prepare the response and return the response
-        $response = $transformer->transformCollection([$this->chat_server->getChatServer($uuid, $withChannels)->toArray()]);
+        $response = $transformer->transformCollection([$this->server->getServer($uuid, $withChannels)->toArray()]);
         return Larapi::respondOk($response[0]);
     }
 
@@ -118,31 +118,31 @@ class ServersController extends Controller
             return Larapi::respondBadRequest(config('errors.4004'), 4004);
 
         // check that region exists and is enabled
-        $chat_region = $this->chat_region->getChatRegionByName($server_region);
-        if(!$chat_region || !$chat_region->active)
+        $region = $this->region->getRegionByName($server_region);
+        if(!$region || !$region->active)
             return Larapi::respondBadRequest(config('errors.4005'), 4005);
 
         // check server name doesnt conflict with an existing server
         $i = 1;
-        foreach ($this->request->user->chat_servers as $server)
+        foreach ($this->request->user->servers as $server)
             if(strtolower($server->name) === strtolower($server_name))
                 $server_name = $server_name . ' ' . ++$i;
 
         // insert new server
-        $server = $this->chat_server->createNewServer($chat_region->id, $this->request->user->id, $server_name);
+        $server = $this->server->createNewServer($region->id, $this->request->user->id, $server_name);
 
         // insert new server setting
-        $server_setting = $this->chat_server_setting->createServerSetting($server->id, $server_private);
+        $server_setting = $this->server_setting->createServerSetting($server->id, $server_private);
 
         // update server with server setting
-        $server->chat_server_setting_id = $server_setting->id;
+        $server->server_setting_id = $server_setting->id;
         $server->save();
 
-        // add server to chat_server_user pivot table
+        // add server to server_user pivot table
         $server->users()->attach($this->request->user->id);
 
         // prepare the response and return the response
-        $response = $transformer->transformCollection([$this->chat_server->getChatServer($server->id)->toArray()]);
+        $response = $transformer->transformCollection([$this->server->getServer($server->id)->toArray()]);
         return Larapi::respondCreated($response[0]);
     }
 

@@ -51,33 +51,33 @@ class User extends Authenticatable
 	}
 
 	/**
-	 * Get the chat servers that the user is associated with.
+	 * Get the servers that the user is associated with.
 	 *
-	 * @return \App\Models\ChatServer
+	 * @return \App\Models\Server
 	 */
-	public function chat_servers()
+	public function servers()
 	{
-		return $this->belongsToMany('App\Models\ChatServer');
+		return $this->belongsToMany('App\Models\Server');
 	}
 
 	/**
-	 * Get the chat servers this user owns.
+	 * Get the servers this user owns.
 	 *
-	 * @return \App\Models\ChatServer
+	 * @return \App\Models\Server
 	 */
-	public function owned_chat_servers()
+	public function owned_servers()
 	{
-		return $this->hasMany('App\Models\ChatServer', 'owner_id', 'id');
+		return $this->hasMany('App\Models\Server', 'owner_id', 'id');
 	}
 
 	/**
 	 * Get the channel events for the user.
 	 *
-	 * @return \App\Models\ChatChannelEvent
+	 * @return \App\Models\ChannelEvent
 	 */
 	public function channel_events()
 	{
-		return $this->hasMany('App\Models\ChatChannelEvent', 'owner_id', 'id');
+		return $this->hasMany('App\Models\ChannelEvent', 'owner_id', 'id');
 	}
 
 	/**
@@ -109,7 +109,6 @@ class User extends Authenticatable
 		})->with($with)->first();
 	}
 
-	
 	/**
 	 * Inserts a new user
 	 * 

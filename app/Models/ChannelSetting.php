@@ -7,7 +7,7 @@ use Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ChatChannelSetting extends Model
+class ChannelSetting extends Model
 {
     use SoftDeletes;
 
@@ -16,7 +16,7 @@ class ChatChannelSetting extends Model
      *
      * @var array
      */ 
-    protected $hidden = ['id', 'chat_channel_id', 'created_at', 'updated_at', 'deleted_at'];
+    protected $hidden = ['id', 'channel_id', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -26,13 +26,13 @@ class ChatChannelSetting extends Model
     protected $dates = ['deleted_at'];
 
     /**
-     * Get the chat channel that owns the setting.
+     * Get the channel that owns the setting.
      *
-     * @return \App\Models\ChatChannel
+     * @return \App\Models\Channel
      */
-    public function chat_channel()
+    public function channel()
     {
-        return $this->belongsTo('App\Models\ChatChannel');
+        return $this->belongsTo('App\Models\Channel');
     }
 
     /**
@@ -44,7 +44,7 @@ class ChatChannelSetting extends Model
     public function createChannelSetting($channel_id, $private = false)
     {
         $channel_setting = new $this;
-        $channel_setting->chat_channel_id = $channel_id;
+        $channel_setting->channel_id = $channel_id;
         $channel_setting->private = $private;
         $channel_setting->save();
 

@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateChatRegionsTable extends Migration
+class CreateServersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,16 +12,16 @@ class CreateChatRegionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('chat_regions', function (Blueprint $t) {
+        Schema::create('servers', function (Blueprint $t) {
             $t->engine = 'InnoDB';
             
             $t->increments('id')->unsigned();
             $t->string('uuid', 36)->unique();
-            $t->string('name', 20)->unique();
-            $t->string('location')->index(); // sydney, melbourne, us west, us east, etc
-            $t->string('server_ip');
-            $t->string('server_uri');
-            $t->boolean('active')->index();
+            $t->integer('server_setting_id')->unsigned()->index();          // references server_settings->id
+            $t->integer('owner_id')->unsigned()->index();                    // references user->id
+            $t->integer('region_id')->unsigned()->index();                   // references region->id
+            $t->string('name', 50);
+            $t->string('avatar')->nullable();
             $t->timestamps();
             $t->softDeletes();
         });
@@ -34,6 +34,6 @@ class CreateChatRegionsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('chat_regions');
+        Schema::drop('servers');
     }
 }

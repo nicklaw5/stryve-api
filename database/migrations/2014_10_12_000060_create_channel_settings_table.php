@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserSettingsTable extends Migration
+class CreateChannelSettingsTable extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -12,14 +12,12 @@ class CreateUserSettingsTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('user_settings', function (Blueprint $t) {
+		Schema::create('channel_settings', function (Blueprint $t) {
 			$t->engine = 'InnoDB';
 			
 			$t->increments('id')->unsigned();
-			$t->integer('user_id')->unsigned()->index();
-			$t->string('last_server', 36)->nullable();
-			$t->string('last_channel', 36)->nullable();
-			$t->enum('theme', ['light', 'dark'])->default('dark');
+			$t->integer('channel_id')->unsigned()->index();         // references channel->id
+			$t->boolean('private')->default(false);                 // public or private channel
 			$t->timestamps();
 			$t->softDeletes();
 		});
@@ -32,6 +30,6 @@ class CreateUserSettingsTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::drop('user_settings');
+		Schema::drop('channel_settings');
 	}
 }

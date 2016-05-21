@@ -2,22 +2,22 @@
 
 use Uuid as Uuid;
 use Carbon as Carbon;
-use App\Models\ChatRegion;
+use App\Models\Region;
 use Illuminate\Database\Seeder;
 
-class ChatRegionsTableSeeder extends Seeder
+class RegionsTableSeeder extends Seeder
 {
 	/**
-	 * @var \App\Models\ChatRegion
+	 * @var \App\Models\Region
 	 */
-	protected $chat_region;
+	protected $region;
 
 	/**
 	 * Instantiate a new instance
 	 */
-	public function __construct(ChatRegion $chat_region)
+	public function __construct(Region $region)
 	{
-		$this->chat_region = $chat_region;
+		$this->region = $region;
 	}
 
     /**
@@ -72,6 +72,6 @@ class ChatRegionsTableSeeder extends Seeder
             ]
         ];
 
-        $this->chat_region->insert($regions);
+        $this->region->insert($regions);
     }
 }

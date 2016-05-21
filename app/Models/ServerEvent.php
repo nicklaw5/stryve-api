@@ -7,7 +7,7 @@ use Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ChatChannelEvent extends Model
+class ServerEvent extends Model
 {
     use SoftDeletes;
 
@@ -16,7 +16,7 @@ class ChatChannelEvent extends Model
      *
      * @var array
      */ 
-    protected $hidden = ['id', 'chat_channel_id', 'owner_id', 'deleted_at'];
+    protected $hidden = ['id', 'deleted_at'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -26,13 +26,13 @@ class ChatChannelEvent extends Model
     protected $dates = ['deleted_at'];
 
     /**
-     * Get the chat_channel that owns the event.
+     * Get the server that owns the event.
      *
-     * @return \App\Models\ChatChannel
+     * @return \App\Models\Server
      */
-    public function chat_channel()
+    public function server()
     {
-        return $this->belongsTo('App\Models\ChatChannel');
+        return $this->belongsTo('App\Models\Server');
     }
 
     /**
@@ -46,44 +46,40 @@ class ChatChannelEvent extends Model
     }
 
     /**
-     * Returns a chat channel event with associated relationships
+     * Returns a server event with associated relationships
      * 
      * @param mixed $id
      * @return this
      */
-    public function getChatChannelEvent($id)
+    public function getServerEvent($id)
     {
         // get server by uuid
         if(strlen(Uuid::import($id)->string) === 36)
-            return $this->where('uuid', $id)->with('chat_channel', 'owner')->first();
+            return $this->where('uuid', $id)->with('server', 'owner')->first();
 
         // get server by id
-        return $this->with('chat_channel', 'owner')->find($id);
+        return $this->with('server', 'owner')->find($id);
     }
 
     /**
-     * Create a new channel event
+     * Create a new server event
      * 
-     * @param int $channel_id
+     * @param int $server_id
      * @param int $owner_id
-     * @param string $event_uuid
      * @param string $event_type
      * @param string $event_text
      * @param string $publish_to
-     * @param bool $editable
      * @return this
      */
-    public function insertNewEvent($channel_id, $owner_id, $event_uuid,
-                                    $event_type, $event_text, $publish_to, $editable)
+    public function insertNewEvent($server_id, $owner_id, $event_type, $event_text, $publish_to)
     {
     	$event = new $this;
-    	$event->uuid 				= $event_uuid;
-    	$event->chat_channel_id 	= $channel_id;
+    	$event->uuid 				= Uuid::generate()->string;
+    	$event->server_id 		= $server_id;
     	$event->owner_id 			= $owner_id;
     	$event->event_type 			= $event_type;
     	$event->event_text 			= $event_text;
     	$event->publish_to 			= $publish_to;
-    	$event->editable 			= $editable;
     	$event->save();
 
     	return $event;

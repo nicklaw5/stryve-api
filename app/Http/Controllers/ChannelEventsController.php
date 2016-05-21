@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Larapi;
-use App\Models\ChatChannel;
-use App\Models\ChatChannelEvent;
+use App\Models\Channel;
+use App\Models\ChannelEvent;
 use Stryve\Transformers\ChannelEventsShowTransformer;
 
 use App\Http\Requests;
@@ -14,12 +14,12 @@ use App\Http\Controllers\Controller;
 class ChannelEventsController extends Controller
 {
 	/**
-	 * @var \App\Models\ChatChannel
+	 * @var \App\Models\Channel
 	 */
-	protected $chat_channel;
+	protected $channel;
 
 	/**
-	 * @var \App\Models\ChatChannelEvent
+	 * @var \App\Models\ChannelEvent
 	 */
 	protected $channel_event;
 
@@ -31,15 +31,15 @@ class ChannelEventsController extends Controller
 	/**
 	 * Instantiate a new instance
 	 */
-	public function __construct(ChatChannel $chat_channel, ChatChannelEvent $channel_event, Request $request)
+	public function __construct(Channel $channel, ChannelEvent $channel_event, Request $request)
 	{
 		$this->request = $request;
-		$this->chat_channel = $chat_channel;
+		$this->channel = $channel;
 		$this->channel_event = $channel_event;
 	}
 
 	/**
-     * Returns a list of chat channel events for a given channel
+     * Returns a list of channel events for a given channel
      *
      * @GET("/api/channels/{uuid}/events")
      * @Versions({"v1"})
@@ -54,16 +54,16 @@ class ChannelEventsController extends Controller
 		$belongs_to_channel = false;
 
 		// get the channel
-		$channel = $this->chat_channel->getChatChannel($uuid);
+		$channel = $this->channel->getChannel($uuid);
 
 		// confirm channel exists
 		if(!$channel)
 			return Larapi::respondNotFound(config('errors.4041'), 4041);
 
 		// check the channel belongs to a server that the user belongs to
-		foreach ($this->request->user->chat_servers as $server)
+		foreach ($this->request->user->servers as $server)
 		{
-			if($server->uuid === $channel->chat_server->uuid)
+			if($server->uuid === $channel->server->uuid)
 			{
 				$belongs_to_channel = true;
 				break;
@@ -79,8 +79,8 @@ class ChannelEventsController extends Controller
 		$limit = ($limit > 50)? 50 : $limit;
 
 		// get the events
-		$events = $this->channel_event->with('chat_channel', 'owner')
-									  ->where('chat_channel_id', $channel->id)
+		$events = $this->channel_event->with('channel', 'owner')
+									  ->where('channel_id', $channel->id)
 									  ->orderBy('created_at', 'desc')
 									  ->limit($limit)
 									  ->get();
@@ -109,16 +109,16 @@ class ChannelEventsController extends Controller
 		$belongs_to_channel = false;
 
 		// get the channel
-		$channel = $this->chat_channel->getChatChannel($uuid);
+		$channel = $this->channel->getChannel($uuid);
 
 		// confirm channel exists
 		if(!$channel)
 			return Larapi::respondNotFound(config('errors.4041'), 4041);
 
 		// check the channel belongs to a server that the user belongs to
-		foreach ($this->request->user->chat_servers as $server)
+		foreach ($this->request->user->servers as $server)
 		{
-			if($server->uuid === $channel->chat_server->uuid)
+			if($server->uuid === $channel->server->uuid)
 			{
 				$belongs_to_channel = true;
 				break;
@@ -146,7 +146,7 @@ class ChannelEventsController extends Controller
 		$event = $this->channel_event->insertNewEvent($channel->id, $this->request->user->id, $event_uuid, $event_type, $event_text, $publish_to, $editable);
 
 		// prepare and send response
-        $response = $transformer->transformCollection([$this->channel_event->getChatChannelEvent($event->id)->toArray()]);
+        $response = $transformer->transformCollection([$this->channel_event->getChannelEvent($event->id)->toArray()]);
         return Larapi::respondCreated($response[0]);
 	}
 }

@@ -7,7 +7,7 @@ use Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ChatRegion extends Model
+class Region extends Model
 {
 	use SoftDeletes;
 
@@ -26,22 +26,22 @@ class ChatRegion extends Model
     protected $dates = ['deleted_at'];
 
     /**
-     * Get chat servers belonging to this region
+     * Get the servers belonging to this region
      *
-     * @return \App\Models\ChatServer
+     * @return \App\Models\Server
      */
-    public function chat_servers()
+    public function servers()
     {
-        return $this->hasMany('App\Models\ChatServer', 'region_id', 'id');
+        return $this->hasMany('App\Models\Server', 'region_id', 'id');
     }
 
     /**
-     * Return the chat region
+     * Return the region
      * 
      * @param string $name
      * @return this 
      */
-    public function getChatRegionByName($name)
+    public function getRegionByName($name)
     {
         return $this->where('name', strtolower($name))->first();
     }

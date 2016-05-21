@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateChatServerSettingsTable extends Migration
+class CreateServerSettingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,11 +12,11 @@ class CreateChatServerSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('chat_server_settings', function (Blueprint $t) {
+        Schema::create('server_settings', function (Blueprint $t) {
             $t->engine = 'InnoDB';
             
             $t->increments('id')->unsigned();
-            $t->integer('chat_server_id')->unsigned()->index();     // references chat_server->id
+            $t->integer('server_id')->unsigned()->index();          // references server->id
             $t->boolean('private')->default(false);                 // public or private server
             $t->timestamps();
             $t->softDeletes();
@@ -30,6 +30,6 @@ class CreateChatServerSettingsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('chat_server_settings');
+        Schema::drop('server_settings');
     }
 }

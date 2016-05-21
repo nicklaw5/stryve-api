@@ -51,11 +51,11 @@ Route::group(['prefix' => 'api', 'middleware' => 'cors'], function() {
 		// Route::put('servers/{uuid}/events/{id}', 'ServerEventsController@update');				// update an existing event
 
 		// server channels
-		Route::get('servers/{uuid}/channels', 'ServerChannelsController@index');					// return all server channels
-		Route::get('servers/{uuid}/channels/{id}', 'ServerChannelsController@show');				// return a server channel
-		Route::post('servers/{uuid}/channels', 'ServerChannelsController@store');					// create a server channel
-		Route::put('servers/{uuid}/channels/{id}', 'ServerChannelsController@update');				// update a server channel
-		Route::delete('servers/{uuid}/channels/{id}', 'ServerChannelsController@delete');			// delete a server channel
+		Route::get('servers/{uuid}/channels', 'ChannelsController@index');							// return all server channels
+		Route::get('servers/{uuid}/channels/{id}', 'ChannelsController@show');						// return a server channel
+		Route::post('servers/{uuid}/channels', 'ChannelsController@store');							// create a server channel
+		Route::put('servers/{uuid}/channels/{id}', 'ChannelsController@update');					// update a server channel
+		Route::delete('servers/{uuid}/channels/{id}', 'ChannelsController@delete');					// delete a server channel
 
 		// channel events
 		Route::get('channels/{uuid}/events', 'ChannelEventsController@show');						// return the recent events for this channel
@@ -64,7 +64,6 @@ Route::group(['prefix' => 'api', 'middleware' => 'cors'], function() {
 
 		// invitions
 		Route::get('invitations/{token}', 'ServerInvitationsController@show');						// accept an invitation to a channel
-		// Route::post('servers/{uuid}/invites', 'ChatChannelInvitesController@store');				// create an invitation to a channel
 	});
 
 });

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Larapi;
-use App\Models\ChatServer;
-use App\Models\ChatChannel;
-use App\Models\ChatChannelSetting;
+use App\Models\Server;
+use App\Models\Channel;
+use App\Models\ChannelSetting;
 use Stryve\Transformers\ServerChannelsShowTransformer;
 use Stryve\Transformers\ServerChannelsIndexTransformer;
 
@@ -13,22 +13,22 @@ use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class ServerChannelsController extends Controller
+class ChannelsController extends Controller
 {
     /**
-     * @var \App\Models\ChatServer
+     * @var \App\Models\Server
      */
-    protected $chat_server;
+    protected $server;
 
     /**
-     * @var \App\Models\ChatChannel
+     * @var \App\Models\Channel
      */
-    protected $chat_channel;
+    protected $channel;
 
     /**
-     * @var \App\Models\ChatChannelSetting
+     * @var \App\Models\ChannelSetting
      */
-    protected $chat_channel_setting;
+    protected $channel_setting;
 
     /**
      * @var \Illuminate\Http\Request
@@ -38,13 +38,13 @@ class ServerChannelsController extends Controller
     /**
      * Instantiate a new instance
      */
-    public function __construct(Request $request, ChatServer $chat_server, ChatChannel $chat_channel,
-    							ChatChannelSetting $chat_channel_setting)
+    public function __construct(Request $request, Server $server, Channel $channel,
+    							ChannelSetting $channel_setting)
     {
     	$this->request = $request;
-    	$this->chat_server = $chat_server;
-    	$this->chat_channel = $chat_channel;
-    	$this->chat_channel_setting = $chat_channel_setting;
+    	$this->server = $server;
+    	$this->channel = $channel;
+    	$this->channel_setting = $channel_setting;
     }
 
 
@@ -62,14 +62,14 @@ class ServerChannelsController extends Controller
     public function index(ServerChannelsIndexTransformer $transformer, $uuid)
     {
     	// get the server
-    	$server = $this->chat_server->where('uuid', $uuid)->with('chat_channels')->first();
+    	$server = $this->server->where('uuid', $uuid)->with('channels')->first();
 
     	// check we found a server
     	if(!$server)
     		return Larapi::respondNotFound(config('errors.4041'), 4041);
 
     	// prepare and send response
-		$response = $transformer->transformCollection($server->chat_channels->toArray());
+		$response = $transformer->transformCollection($server->channels->toArray());
 		return Larapi::respondOk($response);
     }
 
@@ -91,8 +91,8 @@ class ServerChannelsController extends Controller
     	if(!$channel_name)
     		return Larapi::respondBadRequest(config('errors.4001'), 4001);
 
-        // get chat server
-        $server = $this->chat_server->getChatServer($uuid);
+        // get the server
+        $server = $this->server->getServer($uuid);
 
         // confirm server exists
         if(!$server)
@@ -109,22 +109,22 @@ class ServerChannelsController extends Controller
 
         // check channel name doesnt conflict with an existing channels on this server
         $i = 1;
-        foreach ($server->chat_channels as $channel)
+        foreach ($server->channels as $channel)
             if(strtolower($channel->name) === strtolower($channel_name))
                 $channel_name = $channel_name . ' ' . ++$i;
 
 		// create the new channel
-		$channel = $this->chat_channel->createNewChatChannel($channel_name, $server->id);
+		$channel = $this->channel->createNewChannel($channel_name, $server->id);
 
         // create channel setting
-        $channel_setting = $this->chat_channel_setting->createChannelSetting($channel->id, $channel_private);
+        $channel_setting = $this->channel_setting->createChannelSetting($channel->id, $channel_private);
 
         // update channel with channel_settings_id
-        $channel->chat_channel_setting_id = $channel_setting->id;
+        $channel->channel_setting_id = $channel_setting->id;
         $channel->save();
 
         // prepare and send response
-        $response = $transformer->transformCollection([$this->chat_channel->getChatChannel($channel->id)->toArray()]);
+        $response = $transformer->transformCollection([$this->channel->getChannel($channel->id)->toArray()]);
         return Larapi::respondCreated($response[0]);
     }
     

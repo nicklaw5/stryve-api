@@ -14,8 +14,8 @@ class ServerEventsShowTransformer extends Transformer
 	{
 		return [
 			'uuid' 				=> $event['uuid'],
-			'server_uuid'		=> $event['chat_server']['uuid'],
-			'server_name'		=> $event['chat_server']['name'],
+			'server_uuid'		=> $event['server']['uuid'],
+			'server_name'		=> $event['server']['name'],
 			'owner_uuid'		=> $event['owner']['uuid'],
 			'owner_username'	=> $event['owner']['username'],
 			'event_type'		=> $event['event_type'],

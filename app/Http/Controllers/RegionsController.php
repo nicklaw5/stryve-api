@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Larapi;
-use App\Models\ChatRegion;
+use App\Models\Region;
 
 use App\Http\Requests;
 use Illuminate\Http\Request;
@@ -12,16 +12,16 @@ use App\Http\Controllers\Controller;
 class RegionsController extends Controller
 {
     /**
-     * @var \App\Models\ChatRegion
+     * @var \App\Models\Region
      */
-    protected $chat_region;
+    protected $region;
 
     /**
      * Instantiate a new instance
      */
-    public function __construct(ChatRegion $chat_region)
+    public function __construct(Region $region)
     {
-    	$this->chat_region = $chat_region;
+    	$this->region = $region;
     }
 
 
@@ -36,7 +36,7 @@ class RegionsController extends Controller
     public function index()
     {
     	// get all regions
-    	$regions = $this->chat_region->get()->toArray();
+    	$regions = $this->region->get()->toArray();
 
     	// return with HTTP 200 OK along with access token
 		return Larapi::respondOk($regions);

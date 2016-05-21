@@ -14,7 +14,7 @@ class ChannelEventsShowTransformer extends Transformer
 	{
 		return [
 			'uuid' 				=> $event['uuid'],
-			'channel_uuid'		=> $event['chat_channel']['uuid'],
+			'channel_uuid'		=> $event['channel']['uuid'],
 			'owner_uuid'		=> $event['owner']['uuid'],
 			'owner_username'	=> $event['owner']['username'],
 			'event_type'		=> $event['event_type'],

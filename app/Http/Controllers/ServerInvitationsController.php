@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Carbon;
 use Larapi;
-use App\Models\ChatServer;
-use App\Models\ChatServerInvitation;
+use App\Models\Server;
+use App\Models\ServerInvitation;
 use Stryve\Transformers\ServersShowTransformer;
 use Stryve\Transformers\ServerInvitationsShowTransformer;
 
@@ -21,23 +21,23 @@ class ServerInvitationsController extends Controller
 	protected $request;
 
 	/**
-	 * @var \App\Models\ChatServer
+	 * @var \App\Models\Server
 	 */
-	protected $chat_server;
+	protected $server;
 
 	/**
-	 * @var \App\Models\ChatServerInvitation
+	 * @var \App\Models\ServerInvitation
 	 */
-	protected $chat_server_invitation;
+	protected $server_invitation;
 
 	/**
 	 * Instantiate a new instance
 	 */
-	public function __construct(ChatServer $chat_server, ChatServerInvitation $chat_server_invitation, Request $request)
+	public function __construct(Server $server, ServerInvitation $server_invitation, Request $request)
 	{
 		$this->request = $request;
-		$this->chat_server = $chat_server;
-		$this->chat_server_invitation = $chat_server_invitation;
+		$this->server = $server;
+		$this->server_invitation = $server_invitation;
 	}
 
 	/**
@@ -50,7 +50,7 @@ class ServerInvitationsController extends Controller
 	 */
 	public function show(ServersShowTransformer $transformer, $token)
 	{
-		$invitation = $this->chat_server_invitation->whereRaw("BINARY `token` = ?", [$token])->first();
+		$invitation = $this->server_invitation->whereRaw("BINARY `token` = ?", [$token])->first();
 
 		// check have a valid token and it hasnt been revoked
 		if(!$invitation || $invitation->revoked)
@@ -66,14 +66,14 @@ class ServerInvitationsController extends Controller
 
 
 		// get the server that the token represents
-		$server = $this->chat_server->getChatServer($invitation->chat_server_id);
+		$server = $this->server->getServer($invitation->server_id);
 		
 		// confirm server still exists
 		if(!$server)
 			return Larapi::respondNotFound(config('errors.4041'), 4041);
 
 		// check the user doesn't already exists as part of this channel
-		foreach($this->request->user->chat_servers as $user_server)
+		foreach($this->request->user->servers as $user_server)
 			if($server->id === $user_server->id)
 				return Larapi::respondBadRequest(config('errors.40111'), 40111);
 
@@ -85,7 +85,7 @@ class ServerInvitationsController extends Controller
 		$invitation->save();
 
 		// prepare and send response
-        $response = $transformer->transformCollection([$this->chat_server->getChatServer($server->id, true)->toArray()]);
+        $response = $transformer->transformCollection([$this->server->getServer($server->id, true)->toArray()]);
         return Larapi::respondOk($response[0]);
 	}
 
@@ -100,7 +100,7 @@ class ServerInvitationsController extends Controller
 	public function store(ServerInvitationsShowTransformer $transformer, $uuid)
 	{
 		// get the server
-		$server = $this->chat_server->getChatServer($uuid);
+		$server = $this->server->getServer($uuid);
 	
 		// confirm server exists
 		if(!$server)
@@ -111,10 +111,10 @@ class ServerInvitationsController extends Controller
 			return Larapi::respondUnauthorized(config('errors.4012'), 4012);
 
 		// insert new event
-		$invitation = $this->chat_server_invitation->insertNewInvitation($server->id, $this->request->user->id);
+		$invitation = $this->server_invitation->insertNewInvitation($server->id, $this->request->user->id);
 
 		// prepare and send response
-        $response = $transformer->transformCollection([$this->chat_server_invitation->getChatServerInvitation($invitation->id)->toArray()]);
+        $response = $transformer->transformCollection([$this->server_invitation->getServerInvitation($invitation->id)->toArray()]);
         return Larapi::respondCreated($response[0]);
 	}
 }

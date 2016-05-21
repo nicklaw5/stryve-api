@@ -21,9 +21,9 @@ class UsersSelfTransformer extends Transformer
 			'verified'		=> (boolean) $user['verified'],
 			'contacts'		=> [],
 			'settings'		=> [
-				'last_chat_server' 	=> $user['user_settings']['last_chat_server'],
-				'last_chat_channel' => $user['user_settings']['last_chat_channel'],
-				'theme' 			=> $user['user_settings']['theme']
+				'last_server' 	=> $user['user_settings']['last_server'],
+				'last_channel' 	=> $user['user_settings']['last_channel'],
+				'theme' 		=> $user['user_settings']['theme']
 			],
 			'created_at'	=> $user['created_at'],
 			'updated_at'	=> $user['updated_at']

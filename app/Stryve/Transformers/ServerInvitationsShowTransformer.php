@@ -14,8 +14,8 @@ class ServerInvitationsShowTransformer extends Transformer
 	{
 		return [
 			'uuid' 					=> $invitation['uuid'],
-			'server_uuid'			=> $invitation['chat_server']['uuid'],
-			'server_name'			=> $invitation['chat_server']['name'],
+			'server_uuid'			=> $invitation['server']['uuid'],
+			'server_name'			=> $invitation['server']['name'],
 			'inviter_uuid'			=> $invitation['inviter']['uuid'],
 			'inviter_username'		=> $invitation['inviter']['username'],
 			'invitation_token'		=> $invitation['token'],
