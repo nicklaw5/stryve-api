@@ -34,8 +34,8 @@ class RegionsTableSeeder extends Seeder
         		'uuid'			=>	Uuid::generate()->string,
         		'name'			=>	'melb-01',
         		'location'		=>	'Melbourne',
-                'server_ip'     =>  '192.168.10.10',
-        		'server_uri'    =>	'http://stryve.io:3000',
+                'server_ip'     =>  config('stryve.default_ip'),
+        		'server_uri'    =>	config('stryve.defallt_url'),
                 'active'        =>  true,
         		'created_at'	=>	$now,
         		'updated_at'	=>	$now
@@ -44,8 +44,8 @@ class RegionsTableSeeder extends Seeder
                 'uuid'          =>  Uuid::generate()->string,
                 'name'          =>  'syd-01',
                 'location'      =>  'Sydney',
-                'server_ip'     =>  '192.168.10.10',
-                'server_uri'    =>  'http://stryve.io:3000',
+                'server_ip'     =>  config('stryve.default_ip'),
+                'server_uri'    =>  config('stryve.defallt_url'),
                 'active'        =>  true,
                 'created_at'    =>  $now,
                 'updated_at'    =>  $now
@@ -54,8 +54,8 @@ class RegionsTableSeeder extends Seeder
                 'uuid'          =>  Uuid::generate()->string,
                 'name'          =>  'us-west-01',
                 'location'      =>  'US West',
-                'server_ip'     =>  '192.168.10.10',
-                'server_uri'    =>  'http://stryve.io:3000',
+                'server_ip'     =>  config('stryve.default_ip'),
+                'server_uri'    =>  config('stryve.defallt_url'),
                 'active'        =>  true,
                 'created_at'    =>  $now,
                 'updated_at'    =>  $now
@@ -64,8 +64,8 @@ class RegionsTableSeeder extends Seeder
                 'uuid'          =>  Uuid::generate()->string,
                 'name'          =>  'us-east-01',
                 'location'      =>  'US East',
-                'server_ip'     =>  '192.168.10.10',
-                'server_uri'    =>  'http://stryve.io:3000',
+                'server_ip'     =>  config('stryve.default_ip'),
+                'server_uri'    =>  config('stryve.defallt_url'),
                 'active'        =>  true,
                 'created_at'    =>  $now,
                 'updated_at'    =>  $now
