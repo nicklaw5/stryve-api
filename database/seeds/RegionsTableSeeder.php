@@ -35,7 +35,7 @@ class RegionsTableSeeder extends Seeder
         		'name'			=>	'melb-01',
         		'location'		=>	'Melbourne',
                 'server_ip'     =>  config('stryve.default_ip'),
-        		'server_uri'    =>	config('stryve.defallt_url'),
+        		'server_uri'    =>	config('stryve.default_url'),
                 'active'        =>  true,
         		'created_at'	=>	$now,
         		'updated_at'	=>	$now
@@ -45,7 +45,7 @@ class RegionsTableSeeder extends Seeder
                 'name'          =>  'syd-01',
                 'location'      =>  'Sydney',
                 'server_ip'     =>  config('stryve.default_ip'),
-                'server_uri'    =>  config('stryve.defallt_url'),
+                'server_uri'    =>  config('stryve.default_url'),
                 'active'        =>  true,
                 'created_at'    =>  $now,
                 'updated_at'    =>  $now
@@ -55,7 +55,7 @@ class RegionsTableSeeder extends Seeder
                 'name'          =>  'us-west-01',
                 'location'      =>  'US West',
                 'server_ip'     =>  config('stryve.default_ip'),
-                'server_uri'    =>  config('stryve.defallt_url'),
+                'server_uri'    =>  config('stryve.default_url'),
                 'active'        =>  true,
                 'created_at'    =>  $now,
                 'updated_at'    =>  $now
@@ -65,7 +65,7 @@ class RegionsTableSeeder extends Seeder
                 'name'          =>  'us-east-01',
                 'location'      =>  'US East',
                 'server_ip'     =>  config('stryve.default_ip'),
-                'server_uri'    =>  config('stryve.defallt_url'),
+                'server_uri'    =>  config('stryve.default_url'),
                 'active'        =>  true,
                 'created_at'    =>  $now,
                 'updated_at'    =>  $now
