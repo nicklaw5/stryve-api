@@ -104,10 +104,13 @@ class ServersController extends Controller
      * @Response(200, body={ ... })
      */
     public function store(ServersShowTransformer $transformer)
-    {           
-        $server_name    = trim($this->request->name) ?? null;
-        $server_region  = trim($this->request->region) ?? null;
-        $server_private = empty($this->request->private)?   false : true;
+    {
+        // trim request data
+        $this->request->replace(array_map('trim', $this->request->all()));
+
+        $server_name    = isset($this->request->name)? $this->request->name : null;
+        $server_region  = isset($this->request->region)? $this->request->region : null;
+        $server_private = empty($this->request->private)?  false : true;
 
         // confirm required fields have been provided
         if(!$server_name || !$server_region)

@@ -50,7 +50,7 @@ class ContactEventsController extends Controller
 	 */
  	public function index(ContactEventsShowTransformer $tranformer, $uuid)
  	{
- 		$limit = $this->request->limit ?? 25;
+ 		$limit = isset($this->request->limit)? intval($this->request->limit) : 25;
 
  		$contact = $this->user->getUser($uuid);
 
@@ -94,11 +94,14 @@ class ContactEventsController extends Controller
 		// check recipient has not blocked sender
 		// TODO
 		
+		// trim request data
+    	$this->request->replace(array_map('trim', $this->request->all()));
+
 		// filter request data
-		$event_uuid = trim($this->request->event_uuid) ?? null;
-		$event_type = trim($this->request->event_type) ?? null;
-		$event_text = trim($this->request->event_text) ?? null;
-		$publish_to = trim($this->request->publish_to) ?? null;
+		$event_uuid = isset($this->request->event_uuid)? $this->request->event_uuid : null;
+		$event_type = isset($this->request->event_type)? $this->request->event_type : null;
+		$event_text = isset($this->request->event_text)? $this->request->event_text : null;
+		$publish_to = isset($this->request->publish_to)? $this->request->publish_to : null;
 		$editable 	= is_true($this->request->editable);
 
 		// check required fields are valid

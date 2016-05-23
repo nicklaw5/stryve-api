@@ -42,7 +42,7 @@ class ContactsController extends Controller
 	 */
  	public function search(ContactShowTransformer $tranformer)
  	{
-		$query = trim($this->request->q) ?? null;
+		$query = isset($this->request->q)? trim($this->request->q) : null;
 
 		// get and restrict the number of events returned
 		$limit = isset($this->request->limit)? intval($this->request->limit) : 25;
