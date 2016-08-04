@@ -6,7 +6,7 @@ Please see the [Gettting Started](https://github.com/nicklaw5/stryve/wiki/Gettin
 ```bash
 $ git clone https://github.com/nicklaw5/stryve-api-php.git  # clone the repo
 $ composer install                                          # intsall package dependencies
-$ mv .env-example .env                                      # re-name environement config file
+$ cp .env-example .env                                      # copy environement config file
 $ php artisan key:generate                                  # generate a new application key
 $ php artisan migrate:refresh --seed                        # migrate and seed database
 $ php artisan serve --port=8181                             # run the server on http://localhost:8181/
