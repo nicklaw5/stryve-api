@@ -133,10 +133,10 @@ class ChannelEventsController extends Controller
     	$this->request->replace(array_map('trim', $this->request->all()));
 
 		// filter request data
-		$event_uuid = isset($this->request->uuid)? $this->request->uuid : null;
-		$event_type = isset($this->request->event_type)? $this->request->event_type : null;
-		$event_text = isset($this->request->event_text)? $this->request->event_text : null;
-		$publish_to = isset($this->request->publish_to)? $this->request->publish_to : null;
+		$event_uuid = isset($this->request->uuid)? trim($this->request->uuid) : null;
+		$event_type = isset($this->request->event_type)? trim($this->request->event_type) : null;
+		$event_text = isset($this->request->event_text)? trim($this->request->event_text) : null;
+		$publish_to = isset($this->request->publish_to)? trim($this->request->publish_to) : null;
 		$editable 	= is_true($this->request->editable);
 
 		$event_text = ($event_text == '')? null: $event_text;
@@ -144,6 +144,9 @@ class ChannelEventsController extends Controller
 		// check required fields are valid
 		if(!$event_uuid || !$event_type || !$publish_to)
 			return Larapi::respondBadRequest(config('errors.4001'), 4001);
+
+		// add break points to text
+		$event_text = nl2br($event_text, false);
 
 		// insert new event
 		$event = $this->channel_event->insertNewEvent($channel->id, $this->request->user->id, $event_uuid, $event_type, $event_text, $publish_to, $editable);
